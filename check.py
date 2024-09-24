@@ -24,7 +24,7 @@ class BIOSRelease:
 
 
 def fetch() -> list[BIOSRelease]:
-    url = 'https://www.asus.com/support/api/product.asmx/GetPDBIOS?website=global&pdid=21002'
+    url = 'https://www.asus.com/support/api/product.asmx/GetPDBIOS?website=global&pdid=21005'
     rsp = requests.get(url, headers={'User-Agent': 'Mozilla'})
     assert rsp.status_code == 200, f'HTTP {rsp.status_code} {rsp.reason}\n{rsp.text}'
     body = rsp.json()
@@ -34,7 +34,7 @@ def fetch() -> list[BIOSRelease]:
     result = []
     for bios_file in obj['Files']:
         description = bios_file['Description'].strip('"').replace('<br/>', '\n')
-        description = re.sub(r'\n*Before running the USB BIOS Flashback tool, please rename the BIOS file ?\(PX670ERW\.CAP\) using BIOSRenamer\.\n*', '', description)
+        description = re.sub(r'\n*Before running the USB BIOS Flashback tool, please rename the BIOS file ?\(A5458\.CAP\) using BIOSRenamer\.\n*', '', description)
         result.append(BIOSRelease(
             date=datetime.date.fromisoformat(bios_file['ReleaseDate'].replace('/', '-')),
             version=bios_file['Version'],
@@ -49,7 +49,7 @@ def process(bios: BIOSRelease) -> None:
     release = github.github_release_ensure(
         tag_name=bios.title.replace(' ', '_'),
         name=bios.title,
-        timestamp=datetime.datetime.combine(bios.date, datetime.time(), tzinfo=zoneinfo.ZoneInfo('Asia/Shanghai')),
+        timestamp=datetime.datetime.combine(bios.date, datetime.time(), tzinfo=zoneinfo.ZoneInfo('Europe/Istanbul')),
     )
     github.github_release_patch(release, body=bios.description)
     with tempfile.TemporaryFile() as f:
