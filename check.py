@@ -9,7 +9,6 @@ import subprocess
 
 logger = logging.getLogger(__name__)
 
-# Burada token'ınızı doğrudan kod içinde tanımlıyoruz.
 GITHUB_REPOSITORY = os.environ.get('GITHUB_REPOSITORY', 'emrealtinoz/asus-bios-update-monitor')  
 GITHUB_TOKEN = os.environ['TOKEN']
  
@@ -21,7 +20,6 @@ github_headers = {
 GitHubReleaseDict: TypeAlias = dict[str, Any]
 GitHubReleaseAssetDict: TypeAlias = dict[str, Any]
 
-# Fonksiyonlarınız değişmeden kalabilir
 def github_release_ensure(tag_name: str, name: str, timestamp: datetime.datetime) -> GitHubReleaseDict:
     release = github_release_get_by_tag(tag_name)
     if not release:
